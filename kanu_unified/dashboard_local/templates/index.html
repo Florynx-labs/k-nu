@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KÁNU - Unified Engineering Intelligence</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1>🚀 KÁNU</h1>
+                <p class="tagline">"Born from love. Bound by physics."</p>
+                <div class="system-status" id="systemStatus">
+                    <span class="status-indicator" id="statusIndicator"></span>
+                    <span id="statusText">System Not Loaded</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Tab Navigation -->
+        <nav class="tabs">
+            <button class="tab-btn active" data-tab="chat">💬 Chat</button>
+            <button class="tab-btn" data-tab="reasoning">🧠 Reasoning</button>
+            <button class="tab-btn" data-tab="training">🎓 Training</button>
+            <button class="tab-btn" data-tab="dataset">📚 Dataset</button>
+            <button class="tab-btn" data-tab="monitor">📊 Monitor</button>
+            <button class="tab-btn" data-tab="config">⚙️ Config</button>
+        </nav>
+
+        <!-- Tab Content -->
+        <div class="tab-content">
+            
+            <!-- Chat Tab -->
+            <div class="tab-pane active" id="chat">
+                <div class="chat-container">
+                    <div class="chat-sidebar">
+                        <h3>Info</h3>
+                        <div class="info-box">
+                            <div class="info-item">
+                                <label>Mode:</label>
+                                <span id="chatMode">Auto</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Source:</label>
+                                <span id="chatSource">-</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Physics:</label>
+                                <span id="chatPhysics" class="status-ok">✓ Valid</span>
+                            </div>
+                        </div>
+                        <div class="warnings-box" id="warningsBox" style="display:none;">
+                            <h4>⚠️ Warnings</h4>
+                            <ul id="warningsList"></ul>
+                        </div>
+                        <button class="btn btn-secondary" onclick="clearChat()">Clear Chat</button>
+                    </div>
+                    
+                    <div class="chat-main">
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="welcome-message">
+                                <h2>Welcome to KÁNU</h2>
+                                <p>Ask me anything about physics, engineering, or request a design.</p>
+                                <p>I can help with:</p>
+                                <ul>
+                                    <li>Physics questions (FR/EN)</li>
+                                    <li>Engineering design (complete workflow)</li>
+                                    <li>Step-by-step problem solving</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-input-container">
+                            <div class="mode-selector">
+                                <label>
+                                    <input type="radio" name="mode" value="auto" checked> Auto
+                                </label>
+                                <label>
+                                    <input type="radio" name="mode" value="chat"> Chat
+                                </label>
+                                <label>
+                                    <input type="radio" name="mode" value="design"> Design
+                                </label>
+                            </div>
+                            <div class="input-group">
+                                <textarea id="chatInput" placeholder="Type your message..." rows="3"></textarea>
+                                <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reasoning Tab -->
+            <div class="tab-pane" id="reasoning">
+                <div class="reasoning-container">
+                    <div class="reasoning-input">
+                        <h3>Engineering Problem</h3>
+                        <textarea id="reasoningProblem" placeholder="Enter an engineering problem to solve step-by-step..." rows="5"></textarea>
+                        <div class="controls">
+                            <select id="reasoningLanguage">
+                                <option value="auto">Auto Detect</option>
+                                <option value="en">English</option>
+                                <option value="fr">Français</option>
+                            </select>
+                            <button class="btn btn-primary" onclick="solveStepByStep()">Solve Step-by-Step</button>
+                        </div>
+                    </div>
+                    
+                    <div class="reasoning-output">
+                        <div class="output-section">
+                            <h3>Reasoning Steps</h3>
+                            <div id="reasoningSteps" class="steps-container"></div>
+                        </div>
+                        
+                        <div class="output-section">
+                            <h3>Final Answer</h3>
+                            <div id="reasoningAnswer" class="answer-container"></div>
+                        </div>
+                        
+                        <div class="output-section">
+                            <h3>Physics Validation</h3>
+                            <div id="reasoningValidation" class="validation-container"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Training Tab -->
+            <div class="tab-pane" id="training">
+                <div class="training-container">
+                    <div class="training-config">
+                        <h3>Training Configuration</h3>
+                        
+                        <div class="form-group">
+                            <label>Duration (hours):</label>
+                            <input type="number" id="trainDuration" value="1" min="0.1" max="168" step="0.5">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Device:</label>
+                            <select id="trainDevice">
+                                <option value="auto">Auto</option>
+                                <option value="cuda">CUDA (GPU)</option>
+                                <option value="cpu">CPU</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Checkpoint Frequency:</label>
+                            <select id="trainCheckpoint">
+                                <option value="30m">30 minutes</option>
+                                <option value="1h" selected>1 hour</option>
+                                <option value="2h">2 hours</option>
+                                <option value="4h">4 hours</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group checkbox">
+                            <label>
+                                <input type="checkbox" id="trainAdaptive" checked>
+                                Adaptive CPU/GPU Usage
+                            </label>
+                        </div>
+                        
+                        <div class="form-group checkbox">
+                            <label>
+                                <input type="checkbox" id="trainEnrichment" checked>
+                                Auto Dataset Enrichment
+                            </label>
+                        </div>
+                        
+                        <div class="controls">
+                            <button class="btn btn-primary" onclick="startTraining()">🚀 Start Training</button>
+                            <button class="btn btn-danger" onclick="stopTraining()">⏹️ Stop</button>
+                        </div>
+                        
+                        <div class="training-status" id="trainingStatus">
+                            <h4>Status</h4>
+                            <p id="trainingStatusText">Ready to start</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="trainingProgress" style="width: 0%"></div>
+                            </div>
+                            <p id="trainingProgressText">0%</p>
+                        </div>
+                    </div>
+                    
+                    <div class="training-monitor">
+                        <h3>Real-Time Monitoring</h3>
+                        
+                        <div class="metrics-grid">
+                            <div class="metric-card">
+                                <label>Loss</label>
+                                <span id="metricLoss">-</span>
+                            </div>
+                            <div class="metric-card">
+                                <label>Learning Rate</label>
+                                <span id="metricLR">-</span>
+                            </div>
+                            <div class="metric-card">
+                                <label>GPU Usage</label>
+                                <span id="metricGPU">-</span>
+                            </div>
+                            <div class="metric-card">
+                                <label>CPU Usage</label>
+                                <span id="metricCPU">-</span>
+                            </div>
+                            <div class="metric-card">
+                                <label>Tokens/sec</label>
+                                <span id="metricTokens">-</span>
+                            </div>
+                            <div class="metric-card">
+                                <label>Step</label>
+                                <span id="metricStep">-</span>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <canvas id="lossChart"></canvas>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <canvas id="resourceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dataset Tab -->
+            <div class="tab-pane" id="dataset">
+                <div class="dataset-container">
+                    <div class="dataset-header">
+                        <h3>Engineering Dataset</h3>
+                        <button class="btn btn-primary" onclick="loadDataset()">🔄 Refresh</button>
+                    </div>
+                    
+                    <div class="dataset-stats" id="datasetStats">
+                        <div class="stat-item">
+                            <label>Total Examples:</label>
+                            <span id="datasetTotal">-</span>
+                        </div>
+                    </div>
+                    
+                    <div class="dataset-table-container">
+                        <table class="dataset-table">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Language</th>
+                                    <th>Preview</th>
+                                </tr>
+                            </thead>
+                            <tbody id="datasetTableBody">
+                                <tr>
+                                    <td colspan="3" class="text-center">Load dataset to view examples</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monitor Tab -->
+            <div class="tab-pane" id="monitor">
+                <div class="monitor-container">
+                    <div class="monitor-header">
+                        <h3>System Monitor</h3>
+                        <button class="btn btn-primary" onclick="refreshMonitor()">🔄 Refresh</button>
+                    </div>
+                    
+                    <div class="monitor-grid">
+                        <div class="monitor-card">
+                            <h4>CPU</h4>
+                            <div class="monitor-value" id="monitorCPU">-</div>
+                            <div class="monitor-bar">
+                                <div class="monitor-bar-fill" id="monitorCPUBar"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="monitor-card">
+                            <h4>RAM</h4>
+                            <div class="monitor-value" id="monitorRAM">-</div>
+                            <div class="monitor-bar">
+                                <div class="monitor-bar-fill" id="monitorRAMBar"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="monitor-card">
+                            <h4>GPU</h4>
+                            <div class="monitor-value" id="monitorGPU">-</div>
+                            <div class="monitor-bar">
+                                <div class="monitor-bar-fill" id="monitorGPUBar"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="system-info">
+                        <h4>System Information</h4>
+                        <pre id="systemInfo">Loading...</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Config Tab -->
+            <div class="tab-pane" id="config">
+                <div class="config-container">
+                    <h3>System Configuration</h3>
+                    
+                    <div class="form-group">
+                        <label>Model Size:</label>
+                        <select id="configModelSize">
+                            <option value="tiny">Tiny (~50M Parameters) - Fast Testing</option>
+                            <option value="small">Small (~100M Parameters) - Testing</option>
+                            <option value="1b" selected>1B Parameters - Recommended</option>
+                            <option value="2b">2B Parameters - High Quality</option>
+                            <option value="3b">3B Parameters - Best Quality</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Checkpoint Path (optional):</label>
+                        <input type="text" id="configCheckpoint" placeholder="./checkpoints/best_model.pt">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Device:</label>
+                        <select id="configDevice">
+                            <option value="auto" selected>Auto Detect</option>
+                            <option value="cuda">CUDA (GPU)</option>
+                            <option value="cpu">CPU</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn btn-primary btn-large" onclick="loadSystem()">🚀 Load System</button>
+                    
+                    <div class="load-status" id="loadStatus"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dark Mode Toggle -->
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+        <span id="darkModeIcon">🌙</span>
+    </button>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

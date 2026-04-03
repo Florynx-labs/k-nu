@@ -1,0 +1,25 @@
+# KÁNU Unified System Requirements
+
+# Core dependencies (from kanu_llm_prototype)
+torch>=2.0.0
+transformers>=4.30.0
+numpy>=1.24.0
+tqdm>=4.65.0
+
+# Dashboard
+gradio>=4.0.0
+plotly>=5.14.0
+
+# System monitoring
+psutil>=5.9.0
+GPUtil>=1.4.0
+
+# Utilities
+pydantic>=2.0.0
+rich>=13.0.0
+pyyaml>=6.0
+
+# Optional: Performance optimization
+# accelerate>=0.20.0
+# bitsandbytes>=0.39.0
+# flash-attn>=2.0.0

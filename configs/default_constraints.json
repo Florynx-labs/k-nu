@@ -1,0 +1,11 @@
+{
+  "min_thrust_kn": 100.0,
+  "max_thrust_kn": 10000.0,
+  "min_isp_s": 200.0,
+  "max_chamber_pressure_mpa": 30.0,
+  "min_thrust_to_weight": 50.0,
+  "max_engine_mass_kg": 10000.0,
+  "safety_factor": 1.5,
+  "allowed_propellants": ["LOX/RP-1", "LOX/LH2", "N2O4/UDMH", "LOX/CH4"],
+  "allowed_materials": ["Inconel 718", "SS 316L", "Copper C18200 (CuCr)", "Niobium C-103", "Ti-6Al-4V"]
+}

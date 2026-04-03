@@ -1,0 +1,25 @@
+{
+  "objective": "Design a highly efficient rocket engine that reduces fuel consumption while maintaining high thrust",
+  "domain": "rocket_engine",
+  "constraints": {
+    "min_thrust_kn": 500.0,
+    "max_thrust_kn": 5000.0,
+    "min_isp_s": 280.0,
+    "min_thrust_to_weight": 80.0,
+    "max_chamber_pressure_mpa": 25.0,
+    "propellant_candidates": ["LOX/RP-1", "LOX/LH2", "LOX/CH4"],
+    "altitude_km": 0.0
+  },
+  "optimization_priorities": {
+    "isp": 0.35,
+    "thrust": 0.25,
+    "thrust_to_weight": 0.20,
+    "cost": 0.10,
+    "mass": 0.10
+  },
+  "parameters": {
+    "population_size": 5000,
+    "generations": 100,
+    "top_n": 3
+  }
+}

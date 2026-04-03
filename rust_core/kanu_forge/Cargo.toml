@@ -1,0 +1,12 @@
+[package]
+name = "kanu_forge"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+rand = { workspace = true }
+rand_distr = { workspace = true }
+log = { workspace = true }
+kanu_physics = { path = "../kanu_physics" }

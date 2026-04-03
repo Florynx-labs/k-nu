@@ -1,0 +1,10 @@
+[package]
+name = "kanu_world_model"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+log = { workspace = true }
+kanu_physics = { path = "../kanu_physics" }

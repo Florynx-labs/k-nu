@@ -1,0 +1,24 @@
+[workspace]
+members = [
+    "rust_core/kanu_physics",
+    "rust_core/kanu_forge",
+    "rust_core/kanu_evolve",
+    "rust_core/kanu_world_model",
+    "rust_core/kanu_python",
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["KÁNU Team"]
+license = "MIT"
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+rand = "0.8"
+rand_distr = "0.4"
+log = "0.4"
+env_logger = "0.11"
+thiserror = "2"

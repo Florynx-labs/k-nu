@@ -1,0 +1,69 @@
+{
+  "materials": [
+    {
+      "name": "Inconel 718",
+      "category": "Nickel Superalloy",
+      "density_kg_m3": 8190.0,
+      "yield_strength_mpa": 1034.0,
+      "ultimate_strength_mpa": 1241.0,
+      "max_service_temperature_k": 973.0,
+      "thermal_conductivity_w_mk": 11.4,
+      "coefficient_thermal_expansion_per_k": 13.0e-6,
+      "cost_per_kg_usd": 45.0,
+      "applications": "Combustion chambers, turbine components",
+      "notes": "Excellent high-temperature strength. Industry standard for rocket engines."
+    },
+    {
+      "name": "SS 316L",
+      "category": "Stainless Steel",
+      "density_kg_m3": 7990.0,
+      "yield_strength_mpa": 205.0,
+      "ultimate_strength_mpa": 515.0,
+      "max_service_temperature_k": 1143.0,
+      "thermal_conductivity_w_mk": 16.3,
+      "coefficient_thermal_expansion_per_k": 16.0e-6,
+      "cost_per_kg_usd": 8.0,
+      "applications": "Manifolds, structural components, plumbing",
+      "notes": "Good corrosion resistance. Lower cost option."
+    },
+    {
+      "name": "Copper C18200 (CuCr)",
+      "category": "Copper Alloy",
+      "density_kg_m3": 8890.0,
+      "yield_strength_mpa": 310.0,
+      "ultimate_strength_mpa": 450.0,
+      "max_service_temperature_k": 723.0,
+      "thermal_conductivity_w_mk": 325.0,
+      "coefficient_thermal_expansion_per_k": 17.6e-6,
+      "cost_per_kg_usd": 25.0,
+      "applications": "Regeneratively cooled chamber liners, throat inserts",
+      "notes": "Exceptional thermal conductivity for heat management."
+    },
+    {
+      "name": "Niobium C-103",
+      "category": "Refractory Alloy",
+      "density_kg_m3": 8850.0,
+      "yield_strength_mpa": 270.0,
+      "ultimate_strength_mpa": 400.0,
+      "max_service_temperature_k": 1473.0,
+      "thermal_conductivity_w_mk": 42.0,
+      "coefficient_thermal_expansion_per_k": 7.2e-6,
+      "cost_per_kg_usd": 150.0,
+      "applications": "Radiation-cooled nozzle extensions, high-temp components",
+      "notes": "Extreme temperature capability. Used in Draco thrusters."
+    },
+    {
+      "name": "Ti-6Al-4V",
+      "category": "Titanium Alloy",
+      "density_kg_m3": 4430.0,
+      "yield_strength_mpa": 880.0,
+      "ultimate_strength_mpa": 950.0,
+      "max_service_temperature_k": 673.0,
+      "thermal_conductivity_w_mk": 6.7,
+      "coefficient_thermal_expansion_per_k": 8.6e-6,
+      "cost_per_kg_usd": 60.0,
+      "applications": "Structural brackets, injector bodies, low-temp components",
+      "notes": "Best strength-to-weight ratio. Limited by temperature."
+    }
+  ]
+}
