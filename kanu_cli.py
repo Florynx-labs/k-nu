@@ -313,6 +313,8 @@ def cmd_list_models(args):
     
     print("\n🤖 Model Sizes:")
     models = {
+        'tiny': {'params': '50M', 'layers': 6, 'hidden': 512},
+        'small': {'params': '100M', 'layers': 12, 'hidden': 768},
         '1b': {'params': '1.0B', 'layers': 24, 'hidden': 2048},
         '2b': {'params': '2.0B', 'layers': 32, 'hidden': 2560},
         '3b': {'params': '3.0B', 'layers': 40, 'hidden': 2816}
@@ -367,6 +369,9 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
+  # Train a tiny 50M model for 2 minutes (quick test)
+  kanu train --model tiny --duration 2m --mode intensive
+  
   # Train a 1B model for 24 hours with intensive mode
   kanu train --model 1b --duration 24h --mode intensive
   
@@ -391,8 +396,9 @@ Examples:
     
     # Train command
     train_parser = subparsers.add_parser('train', help='Train KÁNU models')
-    train_parser.add_argument('--model', type=str, default='1b', choices=['1b', '2b', '3b'],
-                             help='Model size to train')
+    train_parser.add_argument('--model', type=str, default='1b', 
+                             choices=['tiny', 'small', '1b', '2b', '3b'],
+                             help='Model size to train (tiny=50M, small=100M, 1b, 2b, 3b)')
     train_parser.add_argument('--mode', type=str, default='standard', choices=['standard', 'intensive'],
                              help='Training mode')
     train_parser.add_argument('--duration', type=str, default='24h',
@@ -424,8 +430,9 @@ Examples:
     
     # Inference command
     inference_parser = subparsers.add_parser('inference', help='Run inference')
-    inference_parser.add_argument('--model', type=str, default='1b', choices=['1b', '2b', '3b'],
-                                 help='Model size')
+    inference_parser.add_argument('--model', type=str, default='1b', 
+                                 choices=['tiny', 'small', '1b', '2b', '3b'],
+                                 help='Model size (tiny=50M, small=100M, 1b, 2b, 3b)')
     inference_parser.add_argument('--checkpoint', type=str, required=True,
                                  help='Path to model checkpoint')
     inference_parser.add_argument('--device', type=str, default='cuda',
@@ -450,7 +457,8 @@ Examples:
     
     # Save model command
     save_parser = subparsers.add_parser('save-model', help='Save model configuration')
-    save_parser.add_argument('--model', type=str, required=True, choices=['1b', '2b', '3b'],
+    save_parser.add_argument('--model', type=str, required=True, 
+                            choices=['tiny', 'small', '1b', '2b', '3b'],
                             help='Model size')
     save_parser.add_argument('--checkpoint', type=str, required=True,
                             help='Path to checkpoint')

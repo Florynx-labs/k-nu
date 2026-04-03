@@ -211,6 +211,80 @@ python -c "from kanu_v2_orchestrator import create_kanu_v2; kanu = create_kanu_v
 
 ---
 
+## ⚙️ Configuration Idéale pour l'Entraînement
+
+### Configuration Recommandée par Modèle
+
+**KÁNU-TINY (50M) - Tests Rapides:**
+```bash
+python kanu_cli.py train --model tiny --duration 10m --mode intensive \
+  --batch-size 4 --grad-accum 2 --lr 5e-4 --device cuda
+```
+- **GPU:** GTX 1060 6GB minimum
+- **RAM:** 8GB
+- **Durée recommandée:** 10-30 minutes
+- **Usage:** Tests, prototypage rapide
+
+**KÁNU-SMALL (100M) - Développement:**
+```bash
+python kanu_cli.py train --model small --duration 1h --mode intensive \
+  --batch-size 2 --grad-accum 4 --lr 3e-4 --device cuda
+```
+- **GPU:** RTX 2060 8GB minimum
+- **RAM:** 16GB
+- **Durée recommandée:** 1-4 heures
+- **Usage:** Développement, fine-tuning
+
+**KÁNU-1B - Production Légère:**
+```bash
+python kanu_cli.py train --model 1b --duration 24h --mode intensive \
+  --batch-size 1 --grad-accum 8 --lr 3e-4 --device cuda
+```
+- **GPU:** RTX 3090 24GB ou A6000
+- **RAM:** 32GB
+- **Durée recommandée:** 24-48 heures
+- **Usage:** Production, applications réelles
+
+**KÁNU-2B - Production Standard:**
+```bash
+python kanu_cli.py train --model 2b --duration 48h --mode intensive \
+  --batch-size 1 --grad-accum 16 --lr 2e-4 --device cuda
+```
+- **GPU:** A100 40GB ou multi-GPU
+- **RAM:** 64GB
+- **Durée recommandée:** 48-96 heures
+- **Usage:** Production avancée, haute performance
+
+**KÁNU-3B - Production Avancée:**
+```bash
+python kanu_cli.py train --model 3b --duration 72h --mode intensive \
+  --batch-size 1 --grad-accum 32 --lr 1e-4 --device cuda
+```
+- **GPU:** A100 80GB ou multi-GPU
+- **RAM:** 128GB
+- **Durée recommandée:** 72-168 heures
+- **Usage:** Recherche, applications critiques
+
+### Optimisations Recommandées
+
+**Pour GPU limité:**
+- Réduire `--batch-size` à 1
+- Augmenter `--grad-accum` proportionnellement
+- Utiliser `--device cpu` si nécessaire (plus lent)
+
+**Pour entraînement rapide:**
+- Modèle `tiny` ou `small`
+- Durée courte (10m-1h)
+- Batch size plus élevé si GPU le permet
+
+**Pour production:**
+- Modèle `1b` minimum
+- Mode `intensive` avec adaptation
+- Checkpoints fréquents (`--checkpoint-freq 1h`)
+- Monitoring actif
+
+---
+
 ## 📊 Performance
 
 **Entraînement Intensif (1B sur RTX 3090):**
@@ -221,6 +295,59 @@ python -c "from kanu_v2_orchestrator import create_kanu_v2; kanu = create_kanu_v
 **Inférence:**
 - Chat simple: ~1-2s
 - Design complet V2: ~30-60s
+
+---
+
+## 🌐 Florynx AI Studio - SaaS Platform
+
+**Testez KÁNU sans installation locale !**
+
+Florynx AI Studio est notre plateforme SaaS qui vous permet d'accéder à KÁNU et nos autres IA directement depuis votre navigateur, sans configuration complexe.
+
+### 🎯 Offres
+
+**Plan Développeur - 600$/mois**
+- ✅ Accès complet à KÁNU LLM (1B-3B)
+- ✅ KÁNU V2 Multi-Agents
+- ✅ World Model & Physics Validation
+- ✅ 100 heures d'entraînement GPU/mois
+- ✅ API REST complète
+- ✅ Support technique prioritaire
+- ✅ Stockage 100GB
+- ✅ Jusqu'à 5 utilisateurs
+
+**Plan Entreprise - 50,000$/an**
+- ✅ Tout du Plan Développeur
+- ✅ Entraînement GPU illimité
+- ✅ Déploiement on-premise disponible
+- ✅ Modèles personnalisés
+- ✅ SLA 99.9% uptime
+- ✅ Support dédié 24/7
+- ✅ Formation équipe incluse
+- ✅ Stockage 1TB
+- ✅ Utilisateurs illimités
+- ✅ Intégration personnalisée
+
+### 🚀 Commencer
+
+**Essai gratuit 14 jours disponible !**
+
+👉 **[Accéder à Florynx AI Studio](https://studio.florynx.ai)**
+
+### 💡 Pourquoi choisir Florynx AI Studio ?
+
+- **Zéro Configuration:** Pas besoin de GPU, tout est dans le cloud
+- **Scalabilité:** De quelques tests à la production massive
+- **Sécurité:** Vos données restent privées et chiffrées
+- **Mises à jour:** Accès immédiat aux dernières versions de KÁNU
+- **Collaboration:** Travaillez en équipe facilement
+- **Support Expert:** Notre équipe d'ingénieurs IA vous accompagne
+
+### 📧 Contact
+
+- **Email:** studio@florynx.ai
+- **Site:** https://florynx.ai
+- **Documentation:** https://docs.florynx.ai
 
 ---
 
