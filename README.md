@@ -332,7 +332,7 @@ Florynx AI Studio est notre plateforme SaaS qui vous permet d'accéder à KÁNU 
 
 **Essai gratuit 14 jours disponible !**
 
-👉 **[Accéder à Florynx AI Studio](https://studio.florynx.ai)**
+👉 **[Accéder à Florynx AI Studio](https://florynxai.com)**
 
 ### 💡 Pourquoi choisir Florynx AI Studio ?
 
@@ -345,13 +345,37 @@ Florynx AI Studio est notre plateforme SaaS qui vous permet d'accéder à KÁNU 
 
 ### 📧 Contact
 
-- **Email:** studio@florynx.ai
-- **Site:** https://florynx.ai
-- **Documentation:** https://docs.florynx.ai
+- **Email:** contact@florynxlabs.com
+- **Site:** https://florynxlabs.com
+- **AI Studio:** https://florynxai.com
+- **Documentation:** https://docs.florynxlabs.com
 
 ---
 
-## 📄 License
+## � Soutenir le Projet
+
+**KÁNU est un projet open-source développé avec passion par Florynx Labs.**
+
+Si vous appréciez notre travail et souhaitez soutenir le développement de KÁNU, vous pouvez faire un don ou rejoindre notre communauté !
+
+<div align="center">
+  
+[![Faire un Don](https://img.shields.io/badge/💝_Faire_un_Don-Rejoindre_Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/florynxlabs)
+
+</div>
+
+**Rejoignez notre Discord pour :**
+- 💬 Discuter avec l'équipe et la communauté
+- 🎁 Faire un don pour soutenir le projet
+- 🚀 Accéder aux dernières nouveautés en avant-première
+- 🤝 Contribuer au développement
+- 💡 Partager vos idées et suggestions
+
+👉 **[Rejoindre le Discord Florynx Labs](https://discord.gg/florynxlabs)**
+
+---
+
+## �📄 License
 
 MIT License - Florynx Labs
 
