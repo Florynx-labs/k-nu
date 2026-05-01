@@ -23,7 +23,7 @@ sys.path.insert(0, str(kanu_root / 'kanu_v2'))
 sys.path.insert(0, str(kanu_root / 'kanu_unified'))
 
 from core.unified_orchestrator import create_unified_system, UnifiedOrchestrator
-from core.resource_manager import ResourceManager
+from core.resource_manager import KanuResourceManager
 from training.intensive_trainer import IntensiveTrainer, TrainingMetrics
 from model.kanu_architecture import create_kanu_model
 from training.trainer import EngineeringDataset
@@ -37,7 +37,7 @@ CORS(app)  # Enable CORS for local development
 
 # Global state
 orchestrator = None
-resource_manager = ResourceManager()
+resource_manager = KanuResourceManager()
 intensive_trainer = None
 training_thread = None
 training_active = False

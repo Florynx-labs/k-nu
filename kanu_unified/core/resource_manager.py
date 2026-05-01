@@ -35,15 +35,16 @@ class SystemResources:
     system_load: str  # "low", "medium", "high"
 
 
-class ResourceManager:
+class KanuResourceManager:
     """
-    Gère les ressources système pour entraînement adaptatif
+    Gère les ressources système pour entraînement adaptatif KÁNU
     
     Fonctionnalités:
     - Détection automatique CPU/GPU
     - Monitoring charge système
     - Adaptation dynamique utilisation
     - Prévention surcharge
+    - Configuration hiérarchique optimale
     """
     
     def __init__(
@@ -52,7 +53,7 @@ class ResourceManager:
         min_gpu_usage: float = 0.30,
         max_cpu_usage: float = 0.90,
         min_cpu_usage: float = 0.30,
-        adaptation_interval: int = 10,  # secondes
+        adaptation_interval: int = 5,  # Réduit pour plus de réactivité
         enable_adaptive: bool = True
     ):
         self.max_gpu_usage = max_gpu_usage
@@ -74,7 +75,7 @@ class ResourceManager:
         self.current_gpu_target = max_gpu_usage
         self.current_cpu_target = max_cpu_usage
         
-        logger.info("Resource Manager initialized")
+        logger.info("KÁNU Resource Manager initialized")
         self._log_resources()
     
     def detect_resources(self) -> SystemResources:
@@ -97,6 +98,7 @@ class ResourceManager:
         gpu_memory_total_gb = []
         gpu_memory_used_gb = []
         gpu_utilization = []
+        other_gpu_usage = 0.0
         
         if gpu_available:
             gpu_count = torch.cuda.device_count()
@@ -108,6 +110,11 @@ class ResourceManager:
                     gpu_memory_total_gb.append(gpu.memoryTotal / 1024)
                     gpu_memory_used_gb.append(gpu.memoryUsed / 1024)
                     gpu_utilization.append(gpu.load * 100)
+                    
+                    # Estimer l'usage par d'autres processus (très simplifié)
+                    # Si l'utilisation est élevée mais que NOUS ne faisons rien (au début), 
+                    # alors c'est d'autres processus.
+                    # Note: En production, on utiliserait pynvml pour lister les processus par GPU
             except:
                 # Fallback si GPUtil échoue
                 for i in range(gpu_count):
@@ -117,11 +124,12 @@ class ResourceManager:
                     gpu_memory_used_gb.append(0)
                     gpu_utilization.append(0)
         
-        # Détection autres processus
-        other_processes = cpu_percent > 50 or ram_percent > 70
+        # Détection autres processus (Seuil 10% GPU mentionné par l'utilisateur)
+        other_gpu_active = any(u > 10 for u in gpu_utilization) if gpu_available else False
+        other_processes = cpu_percent > 50 or ram_percent > 70 or other_gpu_active
         
         # Charge système
-        if cpu_percent < 30 and ram_percent < 50:
+        if cpu_percent < 30 and ram_percent < 50 and not other_gpu_active:
             system_load = "low"
         elif cpu_percent < 70 and ram_percent < 80:
             system_load = "medium"
@@ -144,6 +152,35 @@ class ResourceManager:
             system_load=system_load
         )
     
+    def get_optimal_config(self, model_size: str) -> Dict[str, Any]:
+        """
+        Retourne la configuration optimale selon la taille du modèle.
+        
+        1B : Grad-Accum 8, Target RTX 3090 (24GB)
+        2B : Grad-Accum 16, Target A100 (40GB)
+        3B : Grad-Accum 32, Target A100-80GB (80GB)
+        """
+        size = model_size.lower().replace('b', '')
+        
+        config = {
+            "batch_size": 1,  # Toujours 1 pour maximiser la stabilité sur consumer GPUs
+            "grad_accum": 4,   # Valeur par défaut
+            "target_gpu": "RTX 3090"
+        }
+        
+        if size == "1":
+            config["grad_accum"] = 8
+            config["target_gpu"] = "RTX 3090"
+        elif size == "2":
+            config["grad_accum"] = 16
+            config["target_gpu"] = "A100"
+        elif size == "3":
+            config["grad_accum"] = 32
+            config["target_gpu"] = "A100-80GB"
+            
+        logger.info(f"Optimal config for {model_size}: {config}")
+        return config
+
     def _log_resources(self):
         """Log des ressources détectées"""
         r = self.resources
@@ -213,8 +250,8 @@ class ResourceManager:
             new_cpu_target = self.max_cpu_usage
             
         elif r.system_load == "high" or r.other_processes_active:
-            # Charge élevée → réduire utilisation
-            new_gpu_target = self.min_gpu_usage
+            # Charge élevée (ou autre app GPU > 10%) → réduire utilisation à 60%
+            new_gpu_target = 0.60
             new_cpu_target = self.min_cpu_usage
             
         else:
@@ -223,7 +260,7 @@ class ResourceManager:
             new_cpu_target = (self.max_cpu_usage + self.min_cpu_usage) / 2
         
         # Log si changement
-        if new_gpu_target != self.current_gpu_target or new_cpu_target != self.current_cpu_target:
+        if abs(new_gpu_target - self.current_gpu_target) > 0.05 or abs(new_cpu_target - self.current_cpu_target) > 0.05:
             logger.info(f"Adapting resource usage:")
             logger.info(f"  GPU: {self.current_gpu_target*100:.0f}% → {new_gpu_target*100:.0f}%")
             logger.info(f"  CPU: {self.current_cpu_target*100:.0f}% → {new_cpu_target*100:.0f}%")
@@ -235,39 +272,24 @@ class ResourceManager:
     def get_optimal_batch_size(self, base_batch_size: int, device: str = "cuda") -> int:
         """
         Calcule la taille de batch optimale selon ressources disponibles
-        
-        Args:
-            base_batch_size: Taille de batch de base
-            device: "cuda" ou "cpu"
-        
-        Returns:
-            Taille de batch ajustée
         """
         if device == "cuda" and self.resources.gpu_available:
-            # Ajuster selon mémoire GPU disponible
             gpu_idx = 0
             mem_available = self.resources.gpu_memory_total_gb[gpu_idx] - self.resources.gpu_memory_used_gb[gpu_idx]
             mem_total = self.resources.gpu_memory_total_gb[gpu_idx]
             
-            # Si moins de 30% mémoire disponible, réduire batch size
-            if mem_available / mem_total < 0.3:
+            if mem_available / mem_total < 0.2:
                 return max(1, base_batch_size // 2)
-            
-            # Si beaucoup de mémoire, augmenter
-            elif mem_available / mem_total > 0.7:
+            elif mem_available / mem_total > 0.8:
                 return base_batch_size * 2
         
         return base_batch_size
     
     def get_optimal_workers(self) -> int:
         """Calcule le nombre optimal de workers pour DataLoader"""
-        # Utiliser 75% des CPU cores, minimum 1, maximum 8
         optimal = max(1, min(8, int(self.resources.cpu_count * 0.75)))
-        
-        # Réduire si charge CPU élevée
         if self.resources.cpu_percent > 70:
             optimal = max(1, optimal // 2)
-        
         return optimal
     
     def should_reduce_usage(self) -> bool:
@@ -318,3 +340,7 @@ class ResourceManager:
     def __exit__(self, exc_type, exc_val, exc_tb):
         """Context manager exit"""
         self.stop_monitoring()
+
+
+# Alias pour compatibilité
+ResourceManager = KanuResourceManager

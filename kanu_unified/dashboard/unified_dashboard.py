@@ -56,6 +56,7 @@ class UnifiedDashboard:
         # Training metrics queue
         self.training_metrics = []
         self.training_active = False
+        self.thoughts_buffer = []
         
         logger.info("KÁNU Unified Dashboard initialized")
     
@@ -421,15 +422,20 @@ class UnifiedDashboard:
                             metrics_text += f"Tokens/s: {latest['tokens_per_second']:.0f}\n"
                             metrics_text += f"Dataset: {latest['dataset_size']} (+{latest['new_examples_added']})"
                             
-                            # Agent thoughts
-                            thoughts_text = ""
-                            if latest.get('agent_thoughts'):
-                                thoughts_text = "\n".join(latest['agent_thoughts'])
-                            
-                            # New knowledge
-                            knowledge_text = ""
-                            if latest.get('new_knowledge'):
-                                knowledge_text = "\n".join(latest['new_knowledge'])
+                        # Agent thoughts from live stream
+                        new_thoughts = status_dict.get('thoughts', [])
+                        if new_thoughts:
+                            self.thoughts_buffer.extend(new_thoughts)
+                            # Keep only last 20 thoughts for display
+                            if len(self.thoughts_buffer) > 20:
+                                self.thoughts_buffer = self.thoughts_buffer[-20:]
+                        
+                        thoughts_text = "\n".join(self.thoughts_buffer)
+                        
+                        # New knowledge
+                        knowledge_text = ""
+                        if latest and latest.get('new_knowledge'):
+                            knowledge_text = "\n".join(latest['new_knowledge'])
                         
                         # Create plots
                         loss_fig = self._create_loss_plot()
@@ -439,8 +445,8 @@ class UnifiedDashboard:
                             status_text,
                             progress,
                             metrics_text,
-                            thoughts_text if latest and latest.get('agent_thoughts') else "",
-                            knowledge_text if latest and latest.get('new_knowledge') else "",
+                            thoughts_text,
+                            knowledge_text,
                             loss_fig,
                             resource_fig
                         )

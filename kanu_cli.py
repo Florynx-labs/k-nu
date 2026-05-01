@@ -62,8 +62,14 @@ def cmd_train(args):
         from training.intensive_trainer import IntensiveTrainer
         from model.kanu_architecture import create_kanu_model
         from training.trainer import EngineeringDataset, create_engineering_dataset
+        from core.resource_manager import KanuResourceManager
         from transformers import AutoTokenizer
         import torch
+        
+        # Get optimal config based on model size
+        rm = KanuResourceManager()
+        opt_cfg = rm.get_optimal_config(args.model)
+        logger.info(f"Using hierarchical configuration for {args.model}: Batch={opt_cfg['batch_size']}, Accum={opt_cfg['grad_accum']}")
         
         # Parse duration
         duration_hours = parse_duration(args.duration)
@@ -92,7 +98,7 @@ def cmd_train(args):
             checkpoint = torch.load(args.checkpoint, map_location='cpu')
             model.load_state_dict(checkpoint['model_state_dict'])
         
-        # Create trainer
+        # Create trainer with optimal config
         trainer = IntensiveTrainer(
             model=model,
             train_dataset=train_dataset,
@@ -100,8 +106,8 @@ def cmd_train(args):
             checkpoint_frequency=args.checkpoint_freq,
             device=args.device,
             learning_rate=args.lr,
-            batch_size=args.batch_size,
-            gradient_accumulation=args.grad_accum,
+            batch_size=opt_cfg["batch_size"],
+            gradient_accumulation=opt_cfg["grad_accum"],
             enable_adaptive=args.adaptive,
             enable_dataset_enrichment=args.enrich_dataset,
             save_dir=args.save_dir
