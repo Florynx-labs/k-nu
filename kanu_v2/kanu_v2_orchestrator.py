@@ -24,15 +24,8 @@ from agents.collaborative_agents import (
 from world_model.simulation_v2 import WorldModelV2
 from workflow.ten_step_workflow import TenStepWorkflow, WorkflowStep
 
-# Import from kanu_intelligence if available
-try:
-    import sys
-    from pathlib import Path
-    sys.path.insert(0, str(Path(__file__).parent.parent / 'kanu_intelligence'))
-    from multi_design_system import MultiDesignSystem
-except ImportError:
-    logging.warning("kanu_intelligence not available, using simplified design generation")
-    MultiDesignSystem = None
+# Design generation simplified
+MultiDesignSystem = None
 
 logger = logging.getLogger(__name__)
 

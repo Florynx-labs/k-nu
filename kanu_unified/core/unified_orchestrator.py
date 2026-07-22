@@ -14,7 +14,7 @@ import time
 kanu_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(kanu_root / 'kanu_llm_prototype'))
 sys.path.insert(0, str(kanu_root / 'kanu_v2'))
-sys.path.insert(0, str(kanu_root / 'kanu_intelligence'))
+
 
 # Import KÁNU LLM
 from model.kanu_architecture import create_kanu_model
@@ -26,11 +26,7 @@ from kanu_v2_orchestrator import KANUV2
 # Import World Model
 from world_model.simulation_v2 import WorldModelV2
 
-# Import Intelligence
-try:
-    from intelligence_orchestrator import KANUIntelligence
-except ImportError:
-    KANUIntelligence = None
+KANUIntelligence = None
 
 logger = logging.getLogger(__name__)
 

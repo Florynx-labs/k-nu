@@ -1,3 +1,0 @@
-# KÁNU Local Dashboard Requirements
-Flask>=3.0.0
-Flask-CORS>=4.0.0
